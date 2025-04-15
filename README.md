@@ -3,11 +3,13 @@ A.K.A **L**et **Y**our **A**I **D**o **I**t
 
 An MCP (Model Context Protocol) Server specifically designed to help with reverse engineering tasks, majorly focused on Android side.
 
+![Demo Video](demo/demo.mp4)
+
 ## Features
 
 - **APK Decompilation**: Easily decompile APK files using APKEditor.
 - **Radare2 Integration**: Utilize Radare2 for advanced binary analysis.
-- **ADB/Logcat Monitoring**: Monitor device logs in real-time.
+- **ADB/Logcat Integration**: Use ADB and Logcat for real-time debugging.
 - **Custom Scripts**: Run custom scripts for specific reverse engineering tasks.
 - **Automation**: Automate repetitive tasks to save time and effort.
 ... and more!
