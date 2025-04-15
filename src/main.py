@@ -14,6 +14,7 @@ mcp = FastMCP("LYADI: Let Your Ai Do It", dependencies=["apkid", "androguard", "
 
 BIN_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bin")
 APKEDITOR_PATH = os.path.join(BIN_PATH, "apkeditor.jar")
+APKTOOL_PATH = os.path.join(BIN_PATH, "apktool.jar")
 
 
 @mcp.tool()
@@ -116,17 +117,39 @@ def decompile_apk(file_path: str) -> str:
     if not os.path.exists(file_path):
         return "File not found."
 
-    if not os.path.exists(APKEDITOR_PATH):
-        return "APKEditor not found. Please install it first."
-
     output_dir = f"{file_path}_decompiled"
     try:
         if shutil.which("java") is None:
             return "Java is not installed. Please install Java first."
-        os.system(f"java -jar {APKEDITOR_PATH} d -f -o {output_dir} -i {file_path}")
+        if os.path.exists(APKTOOL_PATH):
+            subprocess.run(
+                ["java", "-jar", APKTOOL_PATH, "d", file_path, "-o", output_dir, "-f"],
+                check=True,
+            )
+        elif os.path.exists(APKEDITOR_PATH):
+            subprocess.run(
+                [
+                    "java",
+                    "-jar",
+                    APKEDITOR_PATH,
+                    "d",
+                    "-i",
+                    file_path,
+                    "-o",
+                    output_dir,
+                    "-f",
+                ],
+                check=True,
+            )
+        else:
+            return (
+                "Neither apktool nor apkeditor found. Please install one of them first."
+            )
+        if not os.path.exists(output_dir):
+            return "Decompilation failed."
+        return f"APK decompiled successfully to {output_dir}"
     except Exception as err:
         return f"ERROR: {err}"
-    return output_dir
 
 
 @mcp.tool()

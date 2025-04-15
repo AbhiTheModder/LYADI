@@ -16,7 +16,14 @@ if ! command_exists radare2; then
     radare2/sys/install.sh
 fi
 
-wget -q --show-progress https://github.com/REAndroid/APKEditor/releases/download/V1.4.1/APKEditor-1.4.1.jar -O src/bin/apkeditor.jar
+# Ask the user whether to use apktool or apkeditor
+echo "This script will install apkeditor by default."
+read -p "Do you want to use apktool instead of apkeditor? (y/n): " choice
+if [ "$choice" == "y" ]; then
+    wget -q --show-progress https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.10.0.jar -O src/bin/apktool.jar
+else
+    wget -q --show-progress https://github.com/REAndroid/APKEditor/releases/download/V1.4.1/APKEditor-1.4.1.jar -O src/bin/apkeditor.jar
+fi
 
 pip3 install -r requirements.txt
 
