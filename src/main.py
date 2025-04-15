@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import os
 import shlex
 import shutil
@@ -10,7 +11,9 @@ from mcp.server.fastmcp import Context, FastMCP
 
 from utils import to_os_path, cls
 
-mcp = FastMCP("LYADI: Let Your Ai Do It", dependencies=["apkid", "androguard", "yara"])
+mcp = FastMCP(
+    "LYADI: Let Your Ai Do It", dependencies=["apkid", "androguard", "yara", "r2pipe"]
+)
 
 BIN_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bin")
 APKEDITOR_PATH = os.path.join(BIN_PATH, "apkeditor.jar")
@@ -184,8 +187,13 @@ def read_file(file_path: str) -> str:
 def run_bash_command(command: list[str]) -> dict:
     """Returns exit code, result and error after running bash cmd but before running make sure to validate the command."""
     try:
+        command = shlex.join(command)
         result = subprocess.run(command, shell=True, text=True, capture_output=True)
         # Return output, return code, and error (if any)
+        logging.info(f"Command: {command}")
+        logging.info(f"Output: {result.stdout}")
+        logging.info(f"Error: {result.stderr}")
+        logging.info(f"Return code: {result.returncode}")
         return {
             "output": result.stdout.strip(),
             "return_code": result.returncode,
@@ -223,6 +231,27 @@ def rabin2(file_path: str, args: list[str]) -> str:
         return "rabin2 command not found"
     command = ["rabin2"] + args + [file_path]
     return run_bash_command(command).get("output", "")
+
+
+@mcp.tool()
+def run_r2_command(file_path: str, command: str) -> str:
+    """
+    Run a radare2 command on a file.
+    This tool runs a radare2 command on a file and returns the output.
+    It uses the `r2` command to run the radare2 command.
+    The `command` parameter specifies the radare2 command to run.
+    """
+    file_path = to_os_path(file_path)
+    if not os.path.exists(file_path):
+        return "File not found"
+    if not os.path.isfile(file_path):
+        return "Not a file"
+    import r2pipe
+
+    r2 = r2pipe.open(file_path)
+    output = r2.cmd(command)
+    r2.quit()
+    return output
 
 
 @mcp.tool()
