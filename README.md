@@ -3,7 +3,9 @@ A.K.A **L**et **Y**our **A**I **D**o **I**t
 
 An MCP (Model Context Protocol) Server specifically designed to help with reverse engineering tasks, majorly focused on Android side.
 
-![Demo Video](demo/demo.mp4)
+
+https://github.com/user-attachments/assets/69379b8a-8be0-41de-8839-80c2eeb9931d
+
 
 ## Features
 
