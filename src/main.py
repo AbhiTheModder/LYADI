@@ -49,7 +49,7 @@ def analyze_apk(file_path: str) -> dict:
 
 @mcp.tool()
 def decompile_apk(file_path: str) -> str:
-    """Decompile an APK file and return the output directory using apktool."""
+    """Decompile an APK file and return the output directory using apkeditor."""
     file_path = to_os_path(file_path)
     if not os.path.exists(file_path):
         return "File not found."
