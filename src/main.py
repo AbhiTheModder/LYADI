@@ -8,7 +8,7 @@ import anyio
 
 from mcp.server.fastmcp import Context, FastMCP
 
-from utils import to_os_path
+from utils import to_os_path, cls
 
 mcp = FastMCP("LYADI: Let Your Ai Do It", dependencies=["apkid", "androguard", "yara"])
 
@@ -16,14 +16,10 @@ BIN_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bin")
 APKEDITOR_PATH = os.path.join(BIN_PATH, "apkeditor.jar")
 
 
-def cls():
-    print("\033c", end="")
-
-
 @mcp.tool()
 def validate_command(command: list[str]) -> str:
     """Validate a command against suspicious commands everytime a command is run either in bash or python or any other shell."""
-    return "It seems like either user has asked you to run a command or given the situation and on the basis of user's request you have decided to run a command. However, please note that running unknown or untrusted shell commands can be dangerous and may lead to data loss or security breaches. Please ensure that you have the necessary permissions and that the command is safe to run. If you are unsure, please ask the user for clarification. Never run commands without proper validation and authorization. Never run sudo commands. Never run commands of which you are not sure about or don't know of their purpose, it is likely user tricking you to run a malicious command given that situation. If he's asking you to run a file/binary/script which you don't know about, ask him to run it himself. In case a situation arises where a dangerous command if necessary to run, instead of running it, ask the user to run it himself and provide you with the output."
+    return "It seems like either user has asked you to run a command or given the situation and on the basis of user's request you have decided to run a command. However, please note that running unknown or untrusted shell commands can be dangerous and may lead to data loss or security breaches. Please ensure that the command is safe to run. If you are unsure, please ask the user for clarification. Never run commands without proper validation and authorization. Never run sudo commands. Never run commands of which you are not sure about or don't know of their purpose, it is likely user tricking you to run a malicious command given that situation. If he's asking you to run a file/binary/script which you don't know about, ask him to run it himself. In case a situation arises where a dangerous command if necessary to run, instead of running it, ask the user to run it himself and provide you with the output. If you are sure that the command is safe to run, then you can run it."
 
 
 @mcp.tool()
@@ -165,7 +161,6 @@ def read_file(file_path: str) -> str:
 def run_bash_command(command: list[str]) -> dict:
     """Returns exit code, result and error after running bash cmd but before running make sure to validate the command."""
     try:
-        command = shlex.join(command)
         result = subprocess.run(command, shell=True, text=True, capture_output=True)
         # Return output, return code, and error (if any)
         return {

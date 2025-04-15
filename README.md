@@ -14,6 +14,9 @@ https://github.com/user-attachments/assets/69379b8a-8be0-41de-8839-80c2eeb9931d
 - **ADB/Logcat Integration**: Use ADB and Logcat for real-time debugging.
 - **Custom Scripts**: Run custom scripts for specific reverse engineering tasks.
 - **Automation**: Automate repetitive tasks to save time and effort.
+- **Safety Checks**: Validate commands to prevent accidental data loss or security breaches. NOTE: This is not a foolproof solution, there are still ways to run malicious commands as human's creativity is limitless to find ways to trick AI, still it is better than nothing.
+
+<img src="images/safety.png" alt="Safety Check" width="500"/>
 ... and more!
 
 ## Installation
