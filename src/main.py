@@ -4,13 +4,13 @@ import shlex
 import shutil
 import subprocess
 
-from androguard.core.apk import APK
 import anyio
-from mcp.server.fastmcp import FastMCP, Context
+
+from mcp.server.fastmcp import Context, FastMCP
 
 from utils import to_os_path
 
-mcp = FastMCP("LYADI: Let Your Ai Do It")
+mcp = FastMCP("LYADI: Let Your Ai Do It", dependencies=["apkid", "androguard", "yara"])
 
 BIN_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bin")
 APKEDITOR_PATH = os.path.join(BIN_PATH, "apkeditor.jar")
@@ -33,6 +33,8 @@ def analyze_apk(file_path: str) -> dict:
     if not os.path.exists(file_path):
         return {"error": "File not found."}
 
+    from androguard.core.apk import APK
+
     apk = APK(file_path)
     return {
         "package_name": apk.get_package(),
@@ -45,6 +47,70 @@ def analyze_apk(file_path: str) -> dict:
         "providers": apk.get_providers(),
         "signatures": apk.get_signatures(),
     }
+
+
+@mcp.tool()
+def apkid(file_path: str) -> str:
+    """Analyze an APK file using APKiD. APKiD gives you information about how an APK was made. It identifies many compilers, packers, obfuscators, and other weird stuff. It's PEiD for Android."""
+    file_path = to_os_path(file_path)
+    if not os.path.exists(file_path):
+        return "File not found."
+
+    import apkid as APKiD
+    import yara
+    from apkid.apkid import Options, OutputFormatter, RulesManager, Scanner
+
+    class CustomOutputFormatter(OutputFormatter):
+        """
+        Custom output formatter for apkid
+        """
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+        def write(self, results):
+            if self.json:
+                return self._build_json_output(results)
+            return self._build_console_output(results)
+
+        def _build_json_output(self, results):
+            return self.build_json_output(results)
+
+        def _build_console_output(self, results):
+            output = ""
+            for key, raw_matches in results.items():
+                match_results = self._build_match_results(raw_matches)
+                if len(match_results) == 0:
+                    continue
+                output += f"ᴛᴀʀɢᴇᴛ: `{key.split(os.sep)[-1]}`\n"
+                for tags in sorted(match_results):
+                    descriptions = ", ".join(sorted(match_results[tags]))
+                    if self.include_types:
+                        tags_str = self._colorize_tags(tags)
+                    else:
+                        tags_str = tags
+                    output += f" |-> **{tags_str}** : `{descriptions}`\n"
+            return output
+
+    rules_file_path = os.path.join(
+        os.path.dirname(APKiD.__file__), "rules", "rules.yarc"
+    )
+    try:
+        rules = yara.load(filepath=rules_file_path)
+        options = Options()
+        result = Scanner(rules=rules, options=options).scan_file(file_path)
+        formatter = CustomOutputFormatter(
+            json_output=False,
+            output_dir=None,
+            rules_manager=RulesManager(),
+            include_types=False,
+        )
+        output = formatter.write(result)
+        if output == "":
+            output = "No results found."
+        return output
+    except Exception as e:
+        return str(e)
 
 
 @mcp.tool()
@@ -365,6 +431,7 @@ def adb_list_packages() -> str:
 @mcp.tool()
 def adb_install_apk(file_path: str) -> str:
     """Install an APK file on the device"""
+    file_path = to_os_path(file_path)
     if not shutil.which("adb"):
         return "Error: ADB is not installed"
     # Check if the device is connected
