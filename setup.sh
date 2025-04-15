@@ -17,7 +17,7 @@ if ! command_exists radare2; then
 fi
 
 # Ask the user whether to use apktool or apkeditor
-echo "This script will install apkeditor by default."
+printf "This script will install apkeditor by default.\n"
 read -p "Do you want to use apktool instead of apkeditor? (y/n): " choice
 if [ "$choice" == "y" ]; then
     wget -q --show-progress https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.10.0.jar -O src/bin/apktool.jar
