@@ -146,3 +146,11 @@ Contributions are welcome! Please submit a pull request or open an issue for any
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
+
+## Acknowledgments
+- [MCP Python](https://github.com/modelcontextprotocol/python-sdk)
+- [APKiD](https://github.com/rednaga/APKiD)
+- [Androguard](https://github.com/androguard/androguard)
+- [YARA](https://github.com/VirusTotal/yara) | [YARA-Python](https://github.com/VirusTotal/yara-python) | [YARA-Python-Dex](https://github.com/MobSF/yara-python-dex)
+- [APKEditor](https://github.com/REAndroid/APKEditor)
+- [ADB](https://developer.android.com/tools/adb)
