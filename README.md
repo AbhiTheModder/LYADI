@@ -9,7 +9,7 @@ https://github.com/user-attachments/assets/69379b8a-8be0-41de-8839-80c2eeb9931d
 
 ## Features
 
-- **APK Decompilation**: Easily decompile APK files using APKEditor.
+- **APK Decompilation**: Easily decompile APK files using APKEditor/Apktool.
 - **Radare2 Integration**: Utilize Radare2 for advanced binary analysis.
 - **ADB/Logcat Integration**: Use ADB and Logcat for real-time debugging.
 - **Custom Scripts**: Run custom scripts for specific reverse engineering tasks.
