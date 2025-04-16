@@ -12,8 +12,9 @@ else
 fi
 
 if ! command_exists radare2; then
-    git clone https://github.com/radareorg/radare2
-    radare2/sys/install.sh
+    git clone https://github.com/radareorg/radare2 ~/radare2
+    cd ~/radare2
+    sys/install.sh
 fi
 
 # Ask the user whether to use apktool or apkeditor
@@ -23,6 +24,12 @@ if [ "$choice" == "y" ]; then
     wget -q --show-progress https://bitbucket.org/iBotPeaches/apktool/downloads/apktool_2.10.0.jar -O src/bin/apktool.jar
 else
     wget -q --show-progress https://github.com/REAndroid/APKEditor/releases/download/V1.4.1/APKEditor-1.4.1.jar -O src/bin/apkeditor.jar
+fi
+
+if command_exists termux-setup-storage; then
+    pkg i -y python-cryptography
+    CFLAGS="-Wno-error=incompatible-function-pointer-types -O0" pip install --upgrade lxml
+    wget -q --show-progress https://maglit.me/frida-python -O ~/frida-python.sh && bash ~/frida-python.sh
 fi
 
 pip3 install -r requirements.txt
