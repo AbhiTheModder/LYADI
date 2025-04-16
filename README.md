@@ -22,6 +22,9 @@ https://github.com/user-attachments/assets/69379b8a-8be0-41de-8839-80c2eeb9931d
 
 ... and many more (yet to come)!
 
+> [!TIP]
+> **Android**: You can find complete detailed setup & usage instructions for Termux on [this](https://qbtaumai.pages.dev/posts/lyadi/) blog post.
+
 ## Installation
 
 1. Clone the repository:
