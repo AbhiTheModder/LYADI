@@ -6,7 +6,7 @@ command_exists() {
 
 if command_exists termux-setup-storage; then
     termux-setup-storage
-    pkg up -y && pkg i python wget git build-essential binutils pkg-config openjdk-17 -y
+    pkg up -y && pkg i python wget git build-essential binutils pkg-config openjdk-17 libxml2 libxslt -y
 else
     sudo -k apt update && sudo -k apt upgrade -y && sudo -k apt install wget git build-essential binutils pkg-config openjdk-17-jdk python3 python3-pip python-is-python3 -y
 fi
