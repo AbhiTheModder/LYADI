@@ -12,7 +12,7 @@ else
 fi
 
 if ! command_exists radare2; then
-    git clone https://github.com/radareorg/radare2 ~/radare2
+    git clone https://github.com/radareorg/radare2 ~/radare2 --depth 1
     cd ~/radare2
     sys/install.sh
 fi
